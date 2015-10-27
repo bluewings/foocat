@@ -304,12 +304,30 @@ class App.Dalmuti
     unless @dummy
       @dummy = []
 
+    others = []
+    jesters = []
+    anothers = []
+    for card in cards
+      if card.rank is App.Card.JESTER
+        jesters.push cards
+      else
+        if others.length is 0
+          others.push card
+        else if others[0].rank is card.rank
+          others.push card
+        else
+          anothers.push card
+
+    if anothers.length > 0
+      return false
+
+    console.log '>> ' + (jesters.length + others.length) + ' , ' + others[0].rank
     for card in cards
       for each, i in player.cards
         if card is each
           player.cards.splice i, 1
           break
-    return
+    true
     # console.log "  '#{player.client.name}' (#{player.rank}) is drawing."
 
   taxation: (player, cards) ->
@@ -615,6 +633,17 @@ if ret.avails.length > 0
   cardCnt = currPlayer.cards.length
   currPlayer.drawCard ret.avails[0].items
   console.log "  '#{currPlayer.client.name}'s cards : #{cardCnt} → #{currPlayer.cards.length}"
+
+console.log dalmuti.players.current().client.name
+dalmuti.players.next()
+
+console.log dalmuti.players.current().client.name
+currPlayer = dalmuti.players.current()
+ret = available dalmuti.players.current().cards
+console.log ret
+
+# dalmuti.players.next()
+
 
 # console.log avails
 
